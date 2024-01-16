@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const postController = require("../controllers/postController")
+const commentController = require("../controllers/commentController")
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -39,6 +40,10 @@ router.delete('/posts/:postId', (req, res) => {
       `DELETE HTTP method on post/${req.params.postId} resource`,
     );
 });
+
+router.get('/comments',commentController.comment_list)
+
+router.get('/comments/:commentId', commentController.comment_detail)
 
 router.get('/posts/:postId/comments', (req,res) =>{
     return res.send(`GET HTTP method on posts/${req.params.postId}/commets resource`)
