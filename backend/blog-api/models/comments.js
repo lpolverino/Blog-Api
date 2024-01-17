@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const CommentSchema = new Schema({
-    content:{type:String, required: true, minLength:3, maxLength:100},
-    author:{type:String, required: true, minLength:3, maxLength: 500}
+    content:{type:String, required: true, minLength:3, maxLength:500},
+    author:{type:String, required: true, minLength:3, maxLength: 100}
 });
 
 

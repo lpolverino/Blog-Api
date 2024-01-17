@@ -31,15 +31,10 @@ router.get('/comments',commentController.comment_list)
 
 router.get('/comments/:commentId', commentController.comment_detail)
 
-router.get('/posts/:postId/comments', (req,res) =>{
-    return res.send(`GET HTTP method on posts/${req.params.postId}/commets resource`)
-})
+router.get('/posts/:postId/comments', postController.get_post_comments)
 
-router.get('/posts/:postId/comments/:commentId', (req,res) =>{
-    return res.send(`GET HTTP method on posts/${req.params.postId}/commets/${req.params.commentId} resource`)
-})
+router.get('/posts/:postId/comments/:commentId',postController.get_post_comment)
 
-router.post('/posts/:postId/comments', (req,res) =>{
-    return res.send(`POST HTTP method on posts/${req.params.postId}/commets resource`)
-})
+router.post('/posts/:postId/comments', postController.post_comment)
+
 module.exports = router;
