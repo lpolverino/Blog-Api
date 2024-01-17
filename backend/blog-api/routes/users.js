@@ -3,6 +3,9 @@ const router = express.Router();
 const passport = require("passport")
 const jwt = require("jsonwebtoken")
 
+const postController = require("../controllers/postController")
+const commentController = require("../controllers/commentController")
+
 const verifyToken = async (req,res,next) =>{
   const bearerHeader = req.headers['authorization'];
   if (typeof bearerHeader !== 'undefined'){
@@ -21,7 +24,6 @@ const verifyToken = async (req,res,next) =>{
       res.sendStatus(403);
   }
 }
-
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -44,33 +46,13 @@ router.post(
   }
 );
 
-router.post('/posts', verifyToken , (req, res) => {
-  return res.send('POST HTTP method on post resource');
-});
+router.post('/posts', verifyToken , postController.post_post );
 
-router.put('/posts/:postId',verifyToken, (req, res) => {
-  return res.send(
-    `PUT HTTP method on post/${req.params.postId} resource`,
-  );
-});
+router.put('/posts/:postId',verifyToken, postController.update_post);
 
-router.delete('/posts/:postId', verifyToken, (req, res) => {
-  return res.send(
-    `DELETE HTTP method on post/${req.params.postId} resource`,
-  );
-});
+router.delete('/posts/:postId', verifyToken, postController.delete_post);
 
-router.put('/posts/:postId/comments/:commentId', verifyToken, (req,res) =>{
-  return res.send(
-      `PUT HTTP method on posts/${req.params.postId}/commets/${req.params.commentId} resource`
-  )
-})
-
-router.delete('/posts/:postId/comments/:commentId', verifyToken,(req,res) =>{
-  return res.send(
-      `DELETE HTTP method on posts/${req.params.postId}/commets/${req.params.commentId} resource`
-  )
-})
+router.delete('/posts/:postId/comments/:commentId', verifyToken, postController.delete_comment)
 
 
 module.exports = router;

@@ -34,7 +34,7 @@ exports.get_post_comments = asyncHandler( async (req, res,next) => {
         return next(err);
     }
 
-    res.send(post.comments)
+    res.json(post.comments)
 })
 
 exports.get_post_comment = asyncHandler(async ( req, res, next) => {
@@ -54,7 +54,7 @@ exports.get_post_comment = asyncHandler(async ( req, res, next) => {
         return next(err);
     }
 
-    res.send(comment)
+    res.json(comment)
 })
 
 exports.post_comment = [
@@ -106,6 +106,125 @@ exports.post_comment = [
                 session.endSession();
                 throw error; 
             }
+            res.json(comment)
           }
     })
 ]
+
+exports.post_post = [
+    body("title", "invalid title Lenght")
+    .trim()
+    .isLength({ min: 3, max: 100 })
+    .escape(),
+    body("content", "invalid content lenght")
+    .trim()
+    .isLength({ min: 3, max: 500 })
+    .escape(),
+    body("author", "invalid author Leght")
+    .trim()
+    .isLength({ min: 3, max: 50 })
+    .escape(),
+    body("date", "incorrect date")
+    .optional({ values: "falsy" })
+    .isISO8601()
+    .toDate(),
+    body("published" , "invalid published value")
+    .trim()
+    .isIn(["Published","Unpublished"])
+    .escape(),
+    asyncHandler( async (req,res,next) => {
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const err = new Error(errors.errors[0].msg);
+            err.status = 400;
+            return next(err);
+          } else {
+            const post = new Post({
+                title: req.body.title,
+                content: req.body.content,
+                author: req.body.author,
+                date: req.body.date,
+                comments: [],
+                published: req.body.published
+            })
+            await post.save()
+            res.json(post)
+          }
+    })
+]
+
+exports.update_post = [
+    body("published", "invalid published value")
+    .trim()
+    .isIn(["Published","Unpublished"])
+    .escape(),
+    asyncHandler( async (req,res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const err = new Error(errors.errors[0].msg);
+            err.status = 400;
+            return next(err);
+          } else {
+
+            const post = await Post.findById(req.params.postId).exec()
+
+
+            if(post === null){
+                const err = new Error("Post not found");
+                err.status = 404;
+                return next(err);
+            }
+
+            const newPost = new Post({
+                ...post,
+                _id: req.params.postId,
+                published: req.body.published
+            })
+
+            const updatedPost = await Post.findByIdAndUpdate(req.params.postId, newPost, {})
+            res.json(updatedPost)
+          }
+    })
+]
+
+exports.delete_post = asyncHandler( async (req,res,next) => {
+
+    const post = await Post.findById(req.params.postId)
+    
+    if(post === null){
+        const err = new Error("Post not found");
+        err.status = 404;
+        return next(err);
+    }
+
+    if(post.comments.length > 0){
+        const err = new Error("Post has undeleted comments")
+        err.status = 400
+        return next(err)
+    }
+    await Post.findByIdAndDelete(req.body.postId);
+    res.json({deleted:req.params.postId});
+})
+
+exports.delete_comment = asyncHandler( async (req,res,next) => {
+
+    const post = await Post.findById(req.params.postId)
+    
+    if(post === null){
+        const err = new Error("Post not found");
+        err.status = 404;
+        return next(err);
+    }
+
+    const comment = await Comment.findById(req.params.CommentId)
+
+    if(comment === null){
+        const err = new Error("Comment not found");
+        err.status = 404;
+        return next(err);
+    }
+
+    await Comment.findByIdAndDelete(req.body.commentId);
+    res.json({deleted:req.params.commentId});
+})

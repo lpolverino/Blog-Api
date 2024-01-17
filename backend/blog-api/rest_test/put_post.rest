@@ -1,13 +1,8 @@
-POST http://localhost:3000/user/posts/
+PUT http://localhost:3000/user/posts/65a7f37185c6c19512cbb720
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY1YTY5ZGRiYWQ3NGRhODhhMGEyOGE4MCIsInVzZXJuYW1lIjoibHBvbHZlcmlubyIsInBhc3N3b3JkIjoiJDJhJDEwJHdhUW9WQnFHWUhNUUZkRXgucDJWVE9uc00uSG11RzNKUkhUYjlTaTZ1enR4L3VjUkhWVHRTIiwiX192IjowfSwiaWF0IjoxNzA1NDk3NjE4fQ.6WlrtxrG6jqUMPNjl0JvAa6FM9XCS9pgPI3yJYuwZIY
 Content-Type: application/json
 
 {
-                "title": "some rest client are good ",
-                "content": "if you will use a rest client you should try to use a rest client",
-                "author": "restClient",
-                "date": "",
-                "comments": "[]",
-                "published": "Unpublished"
+                "published": "Published"
 
 }
