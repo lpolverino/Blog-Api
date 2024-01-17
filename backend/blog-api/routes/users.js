@@ -36,14 +36,41 @@ router.post(
   "/log-in",
   passport.authenticate("local", {failureRedirect: "/"}),
   (req,res) => {
-    //jwt sign
-    // TODO: i really dont know where is the user
-    JsonWebTokenError.sign({user:req.user}, 'orcasorcanidas', (err, token) =>{
+    jwt.sign({user:req.user}, 'orcasorcanidas', (err, token) =>{
       res.json({
         token
       });
     });
   }
 );
+
+router.post('/posts', verifyToken , (req, res) => {
+  return res.send('POST HTTP method on post resource');
+});
+
+router.put('/posts/:postId',verifyToken, (req, res) => {
+  return res.send(
+    `PUT HTTP method on post/${req.params.postId} resource`,
+  );
+});
+
+router.delete('/posts/:postId', verifyToken, (req, res) => {
+  return res.send(
+    `DELETE HTTP method on post/${req.params.postId} resource`,
+  );
+});
+
+router.put('/posts/:postId/comments/:commentId', verifyToken, (req,res) =>{
+  return res.send(
+      `PUT HTTP method on posts/${req.params.postId}/commets/${req.params.commentId} resource`
+  )
+})
+
+router.delete('/posts/:postId/comments/:commentId', verifyToken,(req,res) =>{
+  return res.send(
+      `DELETE HTTP method on posts/${req.params.postId}/commets/${req.params.commentId} resource`
+  )
+})
+
 
 module.exports = router;

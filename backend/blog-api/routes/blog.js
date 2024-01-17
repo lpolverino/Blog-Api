@@ -1,4 +1,6 @@
 var express = require('express');
+const { body, validationResult } = require("express-validator");
+
 var router = express.Router();
 
 const postController = require("../controllers/postController")
@@ -25,22 +27,6 @@ router.get('/posts',postController.post_list);
 
 router.get('/posts/:postId',postController.post_detail)
 
-router.post('/posts', (req, res) => {
-    return res.send('POST HTTP method on post resource');
-});
-  
-router.put('/posts/:postId', (req, res) => {
-    return res.send(
-      `PUT HTTP method on post/${req.params.postId} resource`,
-    );
-});
-  
-router.delete('/posts/:postId', (req, res) => {
-    return res.send(
-      `DELETE HTTP method on post/${req.params.postId} resource`,
-    );
-});
-
 router.get('/comments',commentController.comment_list)
 
 router.get('/comments/:commentId', commentController.comment_detail)
@@ -56,17 +42,4 @@ router.get('/posts/:postId/comments/:commentId', (req,res) =>{
 router.post('/posts/:postId/comments', (req,res) =>{
     return res.send(`POST HTTP method on posts/${req.params.postId}/commets resource`)
 })
-
-router.put('/posts/:postId/comments/:commentId', (req,res) =>{
-    return res.send(
-        `PUT HTTP method on posts/${req.params.postId}/commets/${req.params.commentId} resource`
-    )
-})
-
-router.delete('/posts/:postId/comments/:commentId', (req,res) =>{
-    return res.send(
-        `DELETE HTTP method on posts/${req.params.postId}/commets/${req.params.commentId} resource`
-    )
-})
-
 module.exports = router;
