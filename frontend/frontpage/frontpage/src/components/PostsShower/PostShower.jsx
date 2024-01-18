@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react"
+import PropTypes from 'prop-types';
+
 import Post from "../Post/Post"
 import styles from "./post-shower.module.css"
 
@@ -43,6 +45,10 @@ const PostShower = ({publicBackend}) => {
       {posts && posts.map(post => <Post key ={post._id} post={post}></Post>) }
     </div>
   )
+}
+
+PostShower.propTypes ={
+  publicBackend: PropTypes.string.isRequired
 }
 
 export default PostShower
