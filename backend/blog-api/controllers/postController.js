@@ -10,7 +10,8 @@ exports.post_list = asyncHandler(async (req,res,next) => {
     .populate("comments")
     .exec();
 
-    res.send(allPost)
+    const publishedPosts = allPost.filter(post => post.published === "Published")
+    res.send(publishedPosts)
 })
 
 exports.post_detail = asyncHandler(async (req,res,next) => {
