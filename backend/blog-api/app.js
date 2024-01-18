@@ -9,6 +9,7 @@ const passport = require("passport")
 const LocalStrategy = require("passport-local").Strategy
 const User = require( "./models/user")
 const bcrypt = require("bcryptjs")
+const cors = require('cors');
 
 
 const indexRouter = require('./routes/index');
@@ -65,6 +66,8 @@ passport.deserializeUser(async (id, done) => {
 
 
 app.use(logger('dev'));
+
+app.use(cors())
 app.use(express.json());
 app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
