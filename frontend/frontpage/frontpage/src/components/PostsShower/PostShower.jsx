@@ -65,7 +65,7 @@ const PostShower = ({publicBackend}) => {
     }
 
     getPost()
-  },[])
+  },[publicBackend])
 
   return (
     <div className={styles.posts}>

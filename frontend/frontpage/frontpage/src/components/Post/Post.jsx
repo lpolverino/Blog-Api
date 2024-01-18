@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types';
 import Comment from '../Comment/Comment'
+import styles from "./post.module.css"
 
 
 const Post = ({post, handleSubmit}) => {
@@ -29,18 +30,23 @@ const Post = ({post, handleSubmit}) => {
 
     const showComments = () =>{
         return (
-            <div>
+            <div className={styles.comments}>
                 <ul>
                     {post.comments.map(comment => <li key={comment._id}> <Comment comment ={comment}></Comment></li>)}
                 </ul>
-                <form onSubmit={(e) => postComment(e)}>
-                    <label>Author</label>
-                    <input type='text' required placeholder='Anonymus' value={commentAuthor} onChange={(e) =>setCommentAuthor(e.target.value)}></input>
+                <form onSubmit={(e) => postComment(e)} className={styles.form}>
+                    <div className={styles.author}>
+                        <label>By:</label>
+                        <input type='text' required placeholder='Anonymus' value={commentAuthor} onChange={(e) =>setCommentAuthor(e.target.value)}></input>
+                    </div>
 
-                    <label>Comment</label>
-                    <input type='text'required placeholder='great Post!' value={commentContent} onChange={(e) =>setCommentContent(e.target.value)}></input>
-                    {!isCommenting && <button>Comment</button>}
-                    {isCommenting && <button disabled>Commenting...</button>}
+                    <div className={styles.content}>
+                        <input type='text'required placeholder='great Post!' value={commentContent} onChange={(e) =>setCommentContent(e.target.value)}></input>
+                    </div><div className={styles.send}>
+                        
+                        {!isCommenting && <button>Comment</button>}
+                        {isCommenting && <button disabled>Commenting...</button>}
+                    </div>
                 </form>
             </div>
         )
@@ -49,10 +55,10 @@ const Post = ({post, handleSubmit}) => {
     const postDate = (new Date(post.date)).toLocaleString()
 
   return (
-    <div>
+    <div className={styles.post}>
         <h2>{post.title}</h2>
         <p> by : {post.author}</p>
-        {post.date && <p>{postDate}</p>}
+        {post.date && <p>posted {postDate}</p>}
         <p>{post.content}</p>
         <button onClick={ () => setActiveComments(!activeComments)}>Comments</button>
         {activeComments && showComments()}

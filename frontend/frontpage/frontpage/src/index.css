@@ -3,8 +3,9 @@
   margin: 0;
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
+  background-color: rgb(230, 230, 230);
 }
 
-html, body{
+html, body, #root{
   height: 100%;
 }

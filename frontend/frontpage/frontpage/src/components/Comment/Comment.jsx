@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
-
+import styles from "./comment.module.css"
 
 const Comment = ({comment}) => {
   return (
-    <div>
+    <div className={styles.comment}>
         <p>{comment.content}</p>
-        <p>{comment.author}</p>
+        <p className={styles.author}>{comment.author}</p>
     </div>
   )
 }

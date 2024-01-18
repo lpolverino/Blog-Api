@@ -1,0 +1,11 @@
+.posts{
+    color:black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 2.5rem 0;
+}
+.loading{
+    color: black;
+}
+.error{color:red}
