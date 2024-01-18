@@ -101,13 +101,12 @@ exports.post_comment = [
                 const updatedPost = await Post.findByIdAndUpdate(req.params.postId, updatePost, {}, opts);
                 await session.commitTransaction();
                 session.endSession();
-                res.send(`author : ${comment.author} content ${comment.content} was sucefull saved in post ${updatePost._id}`)
+                res.json(comment)
             }catch (error){
                 await session.abortTransaction();
                 session.endSession();
                 throw error; 
             }
-            res.json(comment)
           }
     })
 ]

@@ -9,6 +9,37 @@ const PostShower = ({publicBackend}) => {
   const [posts , setPosts ] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] =useState(null) 
+
+  const handleSubmit = async (id, comment) =>{
+
+    let newComment 
+
+    try{
+        const response = await fetch(publicBackend + "/"+id+"/comments",{
+            method:'POST',
+            headers:{"Content-type":"Application/json"},
+            body:JSON.stringify(comment)
+        })
+
+        if(!response.ok){
+            throw new Error
+        }
+         newComment = await response.json()
+        
+        //add comment to the post
+    }catch(error)
+    {
+        console.log(`error posting the comment ${error}`);
+    }
+    const newPosts = posts.map(post => {
+      if(post._id !== id) return post
+      const newPost = post
+      newPost.comments = [...post.comments, newComment??newComment]
+      return newPost
+    })
+    setPosts(newPosts)
+
+}
   
   useEffect( () =>{
     const getPost = async () => {
@@ -42,7 +73,7 @@ const PostShower = ({publicBackend}) => {
       {error && (
         <div className={styles.error}>{`There is a problem fetching the posts data - ${error}`}</div>
       )}
-      {posts && posts.map(post => <Post key ={post._id} post={post}></Post>) }
+      {posts && posts.map(post => <Post key ={post._id} post={post} handleSubmit = {handleSubmit}></Post>) }
     </div>
   )
 }

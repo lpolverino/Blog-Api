@@ -3,9 +3,29 @@ import PropTypes from 'prop-types';
 import Comment from '../Comment/Comment'
 
 
-const Post = ({post}) => {
+const Post = ({post, handleSubmit}) => {
 
     const [activeComments, setActiveComments] = useState(false)
+    const [isCommenting, setIsCommenting] = useState(false)
+    const [commentAuthor, setCommentAuthor] = useState('')
+    const [commentContent, setCommentContent] = useState('')
+
+    const postComment = async (e) =>{
+        e.preventDefault()
+        const comment = {author: commentAuthor, content: commentContent}
+
+        setIsCommenting(true)
+
+        try{
+            await handleSubmit(post._id, comment)
+        }catch(error)
+        {
+            console.log(`error posting the comment ${error}`);
+        }
+        finally{
+            setIsCommenting(false)
+        }
+    }
 
     const showComments = () =>{
         return (
@@ -13,15 +33,26 @@ const Post = ({post}) => {
                 <ul>
                     {post.comments.map(comment => <li key={comment._id}> <Comment comment ={comment}></Comment></li>)}
                 </ul>
+                <form onSubmit={(e) => postComment(e)}>
+                    <label>Author</label>
+                    <input type='text' required placeholder='Anonymus' value={commentAuthor} onChange={(e) =>setCommentAuthor(e.target.value)}></input>
+
+                    <label>Comment</label>
+                    <input type='text'required placeholder='great Post!' value={commentContent} onChange={(e) =>setCommentContent(e.target.value)}></input>
+                    {!isCommenting && <button>Comment</button>}
+                    {isCommenting && <button disabled>Commenting...</button>}
+                </form>
             </div>
         )
     }
+
+    const postDate = (new Date(post.date)).toLocaleString()
 
   return (
     <div>
         <h2>{post.title}</h2>
         <p> by : {post.author}</p>
-        {post.date && <p>{post.date}</p>}
+        {post.date && <p>{postDate}</p>}
         <p>{post.content}</p>
         <button onClick={ () => setActiveComments(!activeComments)}>Comments</button>
         {activeComments && showComments()}
@@ -39,7 +70,8 @@ Post.propTypes = {
             PropTypes.instanceOf(Date)
         ]),
         comments: PropTypes.array,
-    })
+    }),
+    handleSubmit: PropTypes.func
 }
 
 export default Post
