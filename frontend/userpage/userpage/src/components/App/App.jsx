@@ -3,13 +3,17 @@ import { useState } from "react"
 import UserPanel from "../UserPanel/UserPanel"
 import LogIn from "../LogIn/LogIn"
 
-const loginUrl = 'http://localhost:3000/user/log-in'
-const usersUrl = ''
+
+const  userUrl = 'http://localhost:3000/user'
+const   loginUrl = 'http://localhost:3000/user/log-in'
+
 
 function App() {
 
   const [logIn, setLogIn] = useState(false)
   const [error, setError] = useState(null)
+
+  console.log(sessionStorage.getItem('token'));
 
   const sendLogIn = async (event, username, password) =>{
     event.preventDefault()
@@ -24,9 +28,10 @@ function App() {
         setError(`Server respond with status: ${response.status}`)
         return
       }
-      const token = await response.json()
-      sessionStorage.setItem('token', token);
+      const tokenData = await response.json()
+      sessionStorage.setItem('token', tokenData.token);
       setLogIn(true)
+      setError(null)
       }
     catch (error){
       setError(`there was an error handling the request ${error}`)
@@ -36,7 +41,9 @@ function App() {
   return (
     <div >
       {error && <div> {error}</div>}
-      {logIn ? <UserPanel></UserPanel> :<LogIn login={sendLogIn}></LogIn>}
+      {logIn
+        ?<UserPanel backendUrl = {userUrl}></UserPanel>
+        :<LogIn login={sendLogIn}></LogIn>}
     </div>
   )
 }

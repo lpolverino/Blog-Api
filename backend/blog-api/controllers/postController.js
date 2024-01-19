@@ -3,6 +3,14 @@ const Comment = require("../models/comments")
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 
+exports.get_all_posts = asyncHandler(async(req,res,next) => {
+    const allPost = await Post.find({})
+    .sort({ date: 1 })
+    .populate("comments")
+    .exec();
+
+    res.json({posts: allPost})
+})
 
 exports.post_list = asyncHandler(async (req,res,next) => {
     const allPost = await Post.find({})

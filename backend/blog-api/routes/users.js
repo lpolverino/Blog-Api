@@ -45,7 +45,7 @@ router.post(
     });
   }
 )
-
+router.get('/posts', verifyToken, postController.get_all_posts)
 
 router.post('/posts', verifyToken , postController.post_post );
 
