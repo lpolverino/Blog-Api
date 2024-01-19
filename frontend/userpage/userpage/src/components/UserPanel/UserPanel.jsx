@@ -64,13 +64,39 @@ const UserPanel = ({backendUrl}) => {
     }
   }
 
+  const addnewPost = async (newPost) =>{
+    const post = {
+      ...newPost,
+      date: new Date(),
+      published: newPost.published ? "Published" : "Unpublished"
+    }
+    try{
+      const response = await fetch(backendUrl +'/posts/',{
+        method:'POST',
+        headers:{Authorization: 'Bearer '+sessionStorage.token,"Content-type":"Application/json"},
+        body:JSON.stringify(post)
+      })
+      if(!response.ok){
+        if(response.status === 401) throw new Error("Invalid Credentials")
+        setError(`Server respond with status: ${response.status}`)
+        return
+      }
+      const addedPost = await response.json()
+      const newPosts = posts.concat([addedPost])
+      setPosts(newPosts)
+    }
+    catch(error){
+      setError(`there was an error adding the post${error}`)
+    }
+  }
+
   return (
     <div>
       {isLoading && <div >Loading Posts... </div>}
       {error && (
         <div>{`There is a problem fetching the posts data - ${error}`}</div>
       )}
-      <NewPost></NewPost>
+      <NewPost addPost={addnewPost}></NewPost>
       {posts && posts.map(post => <Post key ={post._id} post={post} togglePublishedHandler={togglePublished} ></Post>) }
     </div>
   )
