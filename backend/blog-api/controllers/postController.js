@@ -177,7 +177,6 @@ exports.update_post = [
 
             const post = await Post.findById(req.params.postId).exec()
 
-
             if(post === null){
                 const err = new Error("Post not found");
                 err.status = 404;

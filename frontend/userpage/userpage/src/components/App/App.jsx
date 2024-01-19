@@ -10,10 +10,7 @@ const   loginUrl = 'http://localhost:3000/user/log-in'
 
 function App() {
 
-  const [logIn, setLogIn] = useState(false)
   const [error, setError] = useState(null)
-
-  console.log(sessionStorage.getItem('token'));
 
   const sendLogIn = async (event, username, password) =>{
     event.preventDefault()
@@ -30,7 +27,6 @@ function App() {
       }
       const tokenData = await response.json()
       sessionStorage.setItem('token', tokenData.token);
-      setLogIn(true)
       setError(null)
       }
     catch (error){
@@ -41,7 +37,7 @@ function App() {
   return (
     <div >
       {error && <div> {error}</div>}
-      {logIn
+      {sessionStorage.token !== null
         ?<UserPanel backendUrl = {userUrl}></UserPanel>
         :<LogIn login={sendLogIn}></LogIn>}
     </div>

@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from "react"
 
 import Post from "../Post/Post"
+import NewPost from '../NewPost/NewPost';
 
 const UserPanel = ({backendUrl}) => {
   const [posts , setPosts ] = useState(null)
@@ -37,6 +38,31 @@ const UserPanel = ({backendUrl}) => {
     getPost()
   },[backendUrl])
 
+  const togglePublished = async (id, newValue) =>{
+    
+    try{
+      const response = await fetch(backendUrl +'/posts/'+id,{
+        method:'PUT',
+        headers:{Authorization: 'Bearer '+sessionStorage.token,"Content-type":"Application/json"},
+        body:JSON.stringify({published:newValue})
+      })
+      if(!response.ok){
+        if(response.status === 401) throw new Error("Invalid Credentials")
+        setError(`Server respond with status: ${response.status}`)
+        return
+      }
+
+    const newPosts = posts.map(post => {
+      if(post._id !== id) return post
+      const newPost = post
+      newPost.published = newValue
+      return newPost
+    })
+    setPosts(newPosts)
+    }catch (error){
+      setError(`there was an error updating the post${error}`)
+    }
+  }
 
   return (
     <div>
@@ -44,7 +70,8 @@ const UserPanel = ({backendUrl}) => {
       {error && (
         <div>{`There is a problem fetching the posts data - ${error}`}</div>
       )}
-      {posts && posts.map(post => <Post key ={post._id} post={post} ></Post>) }
+      <NewPost></NewPost>
+      {posts && posts.map(post => <Post key ={post._id} post={post} togglePublishedHandler={togglePublished} ></Post>) }
     </div>
   )
 }
