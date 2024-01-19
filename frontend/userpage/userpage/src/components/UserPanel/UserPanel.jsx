@@ -90,6 +90,33 @@ const UserPanel = ({backendUrl}) => {
     }
   }
 
+  const deleteComment = async (postId, commentId) =>{
+    try{
+      const response = await fetch(backendUrl + '/posts/' + postId + "/comments/" + commentId,{
+        method:'DELETE',
+        headers:{Authorization: 'Bearer '+sessionStorage.token,"Content-type":"Application/json"},
+      })
+      if(!response.ok){
+        if(response.status === 401) throw new Error("Invalid Credentials")
+        setError(`Server respond with status: ${response.status}`)
+        return
+      }
+      const newPosts = posts.map(post => {
+        if(post._id !== postId) return post
+        const updatedPost = {...post,
+        comments: post.comments.filter(comment => comment._id !== commentId)}
+        return updatedPost
+      })
+      setPosts(newPosts)
+    }catch (error){
+      setError(`there was an error deleting the comment${error}`)
+    }
+  }
+
+  const editComment = async (postId, commetId, newContent, newAuthor) => {
+
+  }
+
   return (
     <div>
       {isLoading && <div >Loading Posts... </div>}
@@ -97,7 +124,16 @@ const UserPanel = ({backendUrl}) => {
         <div>{`There is a problem fetching the posts data - ${error}`}</div>
       )}
       <NewPost addPost={addnewPost}></NewPost>
-      {posts && posts.map(post => <Post key ={post._id} post={post} togglePublishedHandler={togglePublished} ></Post>) }
+      {posts &&
+        posts.map(post =>
+          <Post key ={post._id}
+            post={post}
+            togglePublishedHandler={togglePublished}
+            deleteCommentHandler={deleteComment} 
+            editCommentHandler={editComment}>
+          </Post>
+        ) 
+      }
     </div>
   )
 }

@@ -11,7 +11,15 @@ const Post = ({post, togglePublishedHandler, editCommentHandler, deleteCommentHa
     return (
       <div>
           <ul>
-              {post.comments.map(comment => <li key={comment._id}> <Comment comment ={comment}></Comment></li>)}
+              {post.comments.map(comment => 
+                <li key={comment._id}>
+                   <Comment
+                      comment = {comment}
+                      editComment = {(commentId, newContent, newAuthor) => editCommentHandler(post._id, commentId, newContent, newAuthor)}
+                      deleteComment={(commentId) => deleteCommentHandler(post._id, commentId)}>
+                    </Comment>
+                </li>
+              )}
           </ul>
       </div>
     )

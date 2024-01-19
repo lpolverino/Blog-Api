@@ -224,7 +224,7 @@ exports.delete_comment = asyncHandler( async (req,res,next) => {
         return next(err);
     }
 
-    const comment = await Comment.findById(req.params.CommentId)
+    const comment = await Comment.findById(req.params.commentId)
 
     if(comment === null){
         const err = new Error("Comment not found");
