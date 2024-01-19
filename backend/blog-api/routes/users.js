@@ -36,7 +36,7 @@ router.get('/log-in', function(req,res,next) {
 
 router.post(
   "/log-in",
-  passport.authenticate("local", {failureRedirect: "/"}),
+  passport.authenticate("local"),
   (req,res) => {
     jwt.sign({user:req.user}, 'orcasorcanidas', (err, token) =>{
       res.json({
@@ -44,7 +44,8 @@ router.post(
       });
     });
   }
-);
+)
+
 
 router.post('/posts', verifyToken , postController.post_post );
 

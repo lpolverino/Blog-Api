@@ -8,7 +8,7 @@ const LogIn = ({login}) => {
   
     return (
     <div>
-        <form onSubmit={login}>
+        <form onSubmit={(e) => {login(e,username, password)}}>
           <div>
             <label htmlFor='username'>Username</label>
             <input type="text" name="usename" id="username" value={username} onChange={(e) => setUsername(e.target.value)}/>
